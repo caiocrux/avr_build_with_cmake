@@ -1,6 +1,6 @@
 #ifndef WAIT_H
 #define WAIT_H
 
-void wait();
+void wait(void);
 
 #endif
