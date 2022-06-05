@@ -1,17 +1,19 @@
 cmake_minimum_required(VERSION 3.11)
 
+# Variables regarding the AVR chip
+# CPU, you can find the list here:
+# https://gcc.gnu.org/onlinedocs/gcc/AVR-Options.html
+set(MCU   atmega328p)
+set(F_CPU 16000000UL)
+set(BAUD  115200)
+set(PORT /dev/ttyACM0)
+# The programmer to use, read avrdude manual for list
 set(PROG_TYPE arduino)
 
 
-# Variables regarding the AVR chip
-set(MCU   atmega328p)
-set(F_CPU 16000000)
-set(BAUD  115200)
-set(PORT /dev/ttyACM0)
-
 add_definitions(-DF_CPU=${F_CPU})
 
-# program names
+# Use AVR GCC toolchain
 set(AVRCPP   avr-g++)
 set(AVRC     avr-gcc)
 set(AVRSTRIP avr-strip)
