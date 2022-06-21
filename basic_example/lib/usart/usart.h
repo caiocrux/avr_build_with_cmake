@@ -42,6 +42,7 @@ int USART0_Init(e_serial_speed iSpeed);
 void USART0_SendByte(uint8_t u8Data);
 uint8_t USART0_ReceiveByte(void);
 void USART0_SendString(char* cStringPtr);
+void USART0_SendInterger(int iValue);
 #endif /* USART_H */
 
 /*** end of file ***/

@@ -67,4 +67,10 @@ void USART0_SendString(char* cStringPtr){
         cStringPtr++;
     }
 }
+void USART0_SendInterger(int iValue){
+	char cInterger[5];
+	sprintf(cInterger, "%d", iValue);
+	USART0_SendString(cInterger);
+	USART0_SendString("\r\n");
+}
 
