@@ -23,8 +23,8 @@
 
  */ 
 
-#ifndef LED_H
-#define LED_H
+#ifndef LIB_LED_LED_H_
+#define LIB_LED_LED_H_
 
 #include <stdint.h>
 typedef enum {
@@ -40,7 +40,7 @@ typedef enum {
 } LedState_Type;
 
 
-/* Led's attributes */
+/*  Led's attributes */
 typedef struct {
     LedColors_Type m_color;
     LedState_Type m_state;
@@ -52,7 +52,7 @@ void Led(Led_Type* const me, LedColors_Type color, LedState_Type state);
 void LED_setState(Led_Type *const me, LedState_Type state);
 LedState_Type LED_getState(Led_Type *const me);
 
-#endif /* LED_H */
+#endif  //  LIB_LED_LED_H_
 
 /*** end of file ***/
 

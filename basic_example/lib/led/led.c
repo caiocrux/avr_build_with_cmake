@@ -26,49 +26,41 @@
 #include <usart.h>
 #include <gpio.h>
 
-void Led(Led_Type* const me, LedColors_Type color, LedState_Type state){
+void Led(Led_Type* const me, LedColors_Type color, LedState_Type state) {
     me->m_color = color;
     me->m_state = state;
     GPIO_Init();
-    switch(me->m_color){
+    switch (me->m_color) {
         case GREEN:
-            if(me->m_state) {
-                SetBit(PORTB,PB5);
-            }
-            else {
-                ClrBit(PORTB,PB5);
-            }
-            
+            if (me->m_state) {
+                SetBit(PORTB, PB5);
+            } else {
+                ClrBit(PORTB, PB5);
+              }
         break;
-
         default:
-
         break;
-
     }
 }
 
 void LED_setState(Led_Type *const me, LedState_Type state) {
-   me->m_state = state;
-   // TODO: Remove this part in future. It is the same code of Constructor !
-   switch(me->m_color){
+    me->m_state = state;
+    // TODO(caio_crux): Remove this part in future.
+    // It is the same code of Constructor !
+    switch (me->m_color) {
         case GREEN:
-            if(me->m_state) {
-                SetBit(PORTB,PB5);
-            }
-            else {
-                ClrBit(PORTB,PB5);
-            }
+            if (me->m_state) {
+                SetBit(PORTB, PB5);
+            } else {
+                ClrBit(PORTB, PB5);
+              }
 
         break;
-
         default:
-
         break;
-
     }
 }
 
 LedState_Type LED_getState(Led_Type *const me) {
-   return me->m_state;
+    return me->m_state;
 }

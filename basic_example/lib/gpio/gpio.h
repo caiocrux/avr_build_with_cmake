@@ -23,12 +23,18 @@
 
  */ 
 
-#define SetBit(RES, BIT)(RES |= (1 << BIT))   // Por BIT em nível alto
-#define ClrBit(RES, BIT)(RES &= ~ (1 << BIT)) // Por BIT em nível baixo
-#define TstBit(RES, BIT)(RES &  (1 << BIT)) // testar BIT, retorna 0 ou 1
-#define CplBit(RES, BIT)(RES ^= (1 << BIT)) // Inverter estado do BIT
+#ifndef LIB_GPIO_GPIO_H_
+#define LIB_GPIO_GPIO_H_
+
+#define SetBit(RES, BIT)(RES |= (1 << BIT))  // Por BIT em nível alto
+#define ClrBit(RES, BIT)(RES &= ~(1 << BIT))  // Por BIT em nível baixo
+#define TstBit(RES, BIT)(RES =  (1 << BIT))  // testar BIT, retorna 0 ou 1
+#define CplBit(RES, BIT)(RES ^= (1 << BIT))  // Inverter estado do BIT
 
 void GPIO_Init(void);
+
+#endif  // LIB_GPIO_GPIO_H_
+
 /*void GPIO_SetHighPort(int port, int pin);
 void GPIO_SetLowPort(int port, int pin);
 void GPIO_TogglePort(int port, int pin);
