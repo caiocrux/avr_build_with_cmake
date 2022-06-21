@@ -23,8 +23,8 @@
 
  */
 
-#ifndef POWERLED_H
-#define POWERLED_H
+#ifndef LIB_POWERLED_POWERLED_H_
+#define LIB_POWERLED_POWERLED_H_
 
 #include <stdint.h>
 #include <led.h>
@@ -80,7 +80,7 @@ led_dim_type PowerLed_getVoltage(PowerLed_Type* const me);
 /* Power Led methods */
 led_elec_type PowerLed_ComputePower(PowerLed_Type* const me);
 
-#endif /* POWERLED_H */
+#endif  //  LIB_POWERLED_POWERLED_H_
 
 /*** end of file ***/
 

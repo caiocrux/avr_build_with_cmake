@@ -27,8 +27,8 @@
 #include <gpio.h>
 
 void PowerLed(PowerLed_Type* const me, LedColors_Type color,
-              LedColors_Type state, LedCurrent_Type current,
-              LedDiameter_Type diameter, LedVoltage_Type voltage) {
+    LedColors_Type state, LedCurrent_Type current,
+    LedDiameter_Type diameter, LedVoltage_Type voltage) {
 
     /* Inheriting led class */
     Led(&me->super, color, state);
@@ -39,7 +39,7 @@ void PowerLed(PowerLed_Type* const me, LedColors_Type color,
 }
 
 void PowerLed_setCurrent(PowerLed_Type* const me, LedCurrent_Type current) {
-   me->m_current = current; 
+    me->m_current = current;
 }
 
 void PowerLed_setDiameter(PowerLed_Type* const me, LedDiameter_Type diameter) {

@@ -25,52 +25,78 @@
 #include <avr/io.h>
 #include <usart.h>
 #include <stdio.h>
+#include <stdlib.h>
 
-int USART0_Init(e_serial_speed iSpeed){
+int USART0_Init(e_serial_speed iSpeed) {
     int iBaudRate = 0;
     // see http://wormfood.net/avrbaudcalc.php to understand iBaudRate values
-	switch (iSpeed){
-	    case E_BAUD_2400:	UCSR0A |= (1<<U2X0);     iBaudRate = 832; break;
-	    case E_BAUD_4800:						     iBaudRate = 207; break;
-	    case E_BAUD_9600:						     iBaudRate = 103; break;
-	    case E_BAUD_19200:						     iBaudRate =  51; break;
-	    case E_BAUD_28800:						     iBaudRate =  34; break;
-	    case E_BAUD_38400:						     iBaudRate =  25; break;
-	    case E_BAUD_57600:	UCSR0A |= (1<<U2X0);     iBaudRate =  34; break;
-	    case E_BAUD_1000000:	UCSR0A |= (1<<U2X0); iBaudRate = 1; break;
-	    default : return -1; break;
-	}
-	UBRR0H = (iBaudRate >> 8) & 0xff;
-	UBRR0L = iBaudRate & 0xff;
+    switch (iSpeed) {
+        case E_BAUD_2400:
+            UCSR0A |= (1 << U2X0);
+            iBaudRate = 832;
+            break;
+        case E_BAUD_4800:
+            iBaudRate = 207;
+            break;
+        case E_BAUD_9600:
+            iBaudRate = 103;
+            break;
+        case E_BAUD_19200:
+            iBaudRate =  51;
+            break;
+        case E_BAUD_28800:
+            iBaudRate =  34;
+            break;
+        case E_BAUD_38400:
+            iBaudRate =  25;
+            break;
+        case E_BAUD_57600:
+            UCSR0A |= (1 << U2X0);
+            iBaudRate =  34;
+            break;
+        case E_BAUD_1000000:
+            UCSR0A |= (1 << U2X0);
+            iBaudRate = 1;
+            break;
+        default :
+            return -1;
+            break;
+    }
+    UBRR0H = (iBaudRate >> 8) & 0xff;
+    UBRR0L = iBaudRate & 0xff;
     // Set frame format to 8 data bits, no parity, 1 stop bit
-    UCSR0C |= (1<<UCSZ01)|(1<<UCSZ00);
+    UCSR0C |= (1 << UCSZ01)|(1 << UCSZ00);
     // Turn on the transmission and reception
-  	UCSR0B |= (1 << RXEN0 ) | (1 << TXEN0 );
+    UCSR0B |= (1 << RXEN0) | (1 << TXEN0);
     return 1;
 }
 
 void USART0_SendByte(uint8_t u8Data) {
-    //wait while previous byte is completed
-    while(!(UCSR0A&(1<<UDRE0)));
+    // wait while previous byte is completed
+    while (!(UCSR0A & (1 << UDRE0))) {
+    }
     // Transmit data
     UDR0 = u8Data;
 }
 uint8_t USART0_ReceiveByte(void) {
     // Wait for byte to be received
-    while(!(UCSR0A&(1<<RXC0)));
+    while (!(UCSR0A&(1 << RXC0))) {
+    }
     // Return received data
     return UDR0;
 }
-void USART0_SendString(char* cStringPtr){
-	while(*cStringPtr != 0x00) {
+void USART0_SendString(char* cStringPtr) {
+    while (*cStringPtr != 0x00) {
         USART0_SendByte(*cStringPtr);
         cStringPtr++;
     }
 }
-void USART0_SendInterger(int iValue){
-	char cInterger[5];
-	sprintf(cInterger, "%d", iValue);
-	USART0_SendString(cInterger);
-	USART0_SendString("\r\n");
+void USART0_SendInterger(int iValue) {
+    size_t nbytes = snprintf(NULL, 0, "%d", iValue) + 1; /* +1 for the '\0' */
+    char *str = malloc(nbytes);
+    snprintf(str, nbytes, "%d", iValue);
+    USART0_SendString(str);
+    USART0_SendString("\r\n");
+    free(str);
 }
 

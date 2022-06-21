@@ -21,20 +21,20 @@
  * 
  */
 
-#ifndef USART_H
-#define USART_H
+#ifndef LIB_USART_USART_H_
+#define LIB_USART_USART_H_
 
 #include <stdio.h>
 
 typedef enum serial_speed {
-	E_BAUD_2400 = 0,
-	E_BAUD_4800,
-	E_BAUD_9600,
-	E_BAUD_14400,
-	E_BAUD_19200,
-	E_BAUD_28800,
-	E_BAUD_38400,
-	E_BAUD_57600,
+    E_BAUD_2400 = 0,
+    E_BAUD_4800,
+    E_BAUD_9600,
+    E_BAUD_14400,
+    E_BAUD_19200,
+    E_BAUD_28800,
+    E_BAUD_38400,
+    E_BAUD_57600,
     E_BAUD_1000000
 } e_serial_speed;
 
@@ -43,6 +43,6 @@ void USART0_SendByte(uint8_t u8Data);
 uint8_t USART0_ReceiveByte(void);
 void USART0_SendString(char* cStringPtr);
 void USART0_SendInterger(int iValue);
-#endif /* USART_H */
+#endif  //  LIB_USART_USART_H_
 
 /*** end of file ***/
