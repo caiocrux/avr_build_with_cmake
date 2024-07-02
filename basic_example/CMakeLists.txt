@@ -36,6 +36,7 @@ set(BASE_PATH    "${${PROJECT_NAME}_SOURCE_DIR}")
 set(INC_PATH     "${BASE_PATH}/include")
 set(SRC_PATH     "${BASE_PATH}/src")
 set(LIB_DIR_PATH "${BASE_PATH}/lib")
+set(3RD_PARTY_LIB_DIR_PATH "${BASE_PATH}/3rd_Party")
 
 # Files to be compiled
 file(GLOB SRC_FILES "${SRC_PATH}/*.cpp"
@@ -65,6 +66,14 @@ foreach(subdir ${LIBRARIES})
     list(APPEND LIB_SRC_FILES "${lib_files}")
 endforeach()
 
+# Include ioLibrary_Driver
+set(IOLIBRARY_DIR "${3RD_PARTY_LIB_DIR_PATH}/ioLibrary_Driver/Ethernet/")
+file(GLOB IOLIBRARY_SOURCES "${IOLIBRARY_DIR}/*.c"
+                            "${IOLIBRARY_DIR}/W5100/*.c")
+
+include_directories(${IOLIBRARY_DIR})
+include_directories(${IOLIBRARY_DIR}/socket)
+
 # Compiler flags
 set(CSTANDARD "-std=gnu99")
 set(CDEBUG    "-gstabs -g -ggdb")
@@ -83,7 +92,7 @@ set(CMAKE_ASM_FLAGS   "${CFLAGS}")
 
 # Project setup
 include_directories(${INC_PATH} ${LIB_INC_PATH})
-add_executable(${PROJECT_NAME} ${SRC_FILES} ${LIB_SRC_FILES})
+add_executable(${PROJECT_NAME} ${SRC_FILES} ${LIB_SRC_FILES} ${IOLIBRARY_SOURCES})
 set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}.elf")
 
 # Compiling targets
