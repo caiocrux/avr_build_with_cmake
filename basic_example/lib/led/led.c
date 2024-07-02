@@ -29,7 +29,6 @@
 void Led(Led_Type* const me, LedColors_Type color, LedState_Type state) {
     me->m_color = color;
     me->m_state = state;
-    GPIO_Init();
     switch (me->m_color) {
         case GREEN:
             if (me->m_state) {

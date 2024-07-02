@@ -67,12 +67,30 @@ foreach(subdir ${LIBRARIES})
 endforeach()
 
 # Include ioLibrary_Driver
-set(IOLIBRARY_DIR "${3RD_PARTY_LIB_DIR_PATH}/ioLibrary_Driver/Ethernet/")
-file(GLOB IOLIBRARY_SOURCES "${IOLIBRARY_DIR}/*.c"
-                            "${IOLIBRARY_DIR}/W5100/*.c")
+set(IOLIBRARY_DIR "${3RD_PARTY_LIB_DIR_PATH}/ioLibrary_Driver")
+file(GLOB IOLIBRARY_SOURCES "${IOLIBRARY_DIR}/Ethernet/*.c"
+                            "${IOLIBRARY_DIR}/Ethernet/W5100/*.c")
 
-include_directories(${IOLIBRARY_DIR})
-include_directories(${IOLIBRARY_DIR}/socket)
+# DNS sources
+file(GLOB DNS_SOURCES
+    ${IOLIBRARY_DIR}/Internet/DNS/*.c
+)
+
+
+
+# MQTT sources
+file(GLOB MQTT_SOURCES
+    ${IOLIBRARY_DIR}/Internet/MQTT/*.c
+)
+
+# MQTT Paho sources
+file(GLOB PAHO_SOURCES
+    ${IOLIBRARY_DIR}/Internet/MQTT/MQTTPacket/src/*.c
+)
+
+include_directories(${IOLIBRARY_DIR}/Ethernet/)
+include_directories(${IOLIBRARY_DIR}/Internet/MQTT)
+include_directories(${IOLIBRARY_DIR}/Internet/DNS)
 
 # Compiler flags
 set(CSTANDARD "-std=gnu99")
@@ -92,7 +110,7 @@ set(CMAKE_ASM_FLAGS   "${CFLAGS}")
 
 # Project setup
 include_directories(${INC_PATH} ${LIB_INC_PATH})
-add_executable(${PROJECT_NAME} ${SRC_FILES} ${LIB_SRC_FILES} ${IOLIBRARY_SOURCES})
+add_executable(${PROJECT_NAME} ${SRC_FILES} ${LIB_SRC_FILES} ${IOLIBRARY_SOURCES} ${MQTT_SOURCES} ${DNS_SOURCES} ${PAHO_SOURCES})
 set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}.elf")
 
 # Compiling targets
