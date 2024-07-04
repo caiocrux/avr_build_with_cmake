@@ -25,18 +25,27 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
+#include "socket.h"
+#include <MQTTClient.h>
 #include <gpio.h>
 #include <led.h>
+#include <mqtt_interface.h>
 #include <powerled.h>
 #include <stdbool.h>
 #include <string.h>
 #include <usart.h>
 #include <wizchip_conf.h>
 #include <wiznet_ll.h>
-#include "socket.h"
-#include <MQTTClient.h>
-#include <mqtt_interface.h>
+
+#include <timer.h>
+
 void messageArrived(MessageData *md);
+
+// User-defined callback function
+void onTimer1ms() {
+  // Code to run every 1 ms
+  MilliTimer_Handler();
+}
 
 void messageArrived(MessageData *md) {
   MQTTMessage *message = md->message;
@@ -47,23 +56,30 @@ void messageArrived(MessageData *md) {
   //*(testbuffer + (int)message->payloadlen + 1) = "\n";
   printf("%s\r\n", testbuffer);
   if (testbuffer[0] == '1') {
-    USART0_SendString("Led goes to 1!");
+    USART0_SendString("Led goes to 1!\r\n");
   } else if (testbuffer[0] == '0') {
-    USART0_SendString("Led goes to 0");
+    USART0_SendString("Led goes to 0\r\n");
   }
 }
 
 int main(void) {
   USART0_Init(E_BAUD_1000000);
   initWiznetSPI();
+
+  // Initialize Timer1 for 1 ms interrupts
+  Timer1ms_Init();
+
+  // Set the user-defined callback function
+  Timer1ms_SetCallback(onTimer1ms);
+
   uint8_t bufSize[] = {2, 2, 2, 2};
   uint8_t retVal = 0;
   USART0_SendString("MQTT test !!\r\n");
   wiz_NetInfo netInfo = {
       .mac = {0x00, 0xAA, 0xBB, 0xCC, 0xDE, 0x02}, // Mac address
-      .ip = {192, 168, 0, 159},                   // IP address
+      .ip = {192, 168, 0, 159},                    // IP address
       .sn = {255, 255, 255, 0},                    // Subnet mask
-      .gw = {192, 168, 1, 1}};                    // Gateway address
+      .gw = {192, 168, 1, 1}};                     // Gateway address
 
   reg_wizchip_cs_cbfunc(cs_sel, cs_desel);
   reg_wizchip_spi_cbfunc(spi_rb, spi_wb);
@@ -85,7 +101,11 @@ int main(void) {
   char *clientid = "UatuBoard";
   NewNetwork(&n, 1);
   USART0_SendString("MQTT test3 !!\r\n");
-  ConnectNetwork(&n, "broker.hivemq.com", 1883);
+  unsigned char targetIP[4] = {192, 168, 0, 205};
+  if (ConnectNetwork(&n, targetIP, 1883) != SOCK_OK) {
+    USART0_SendString("Could  Not open the socket!!\r\n");
+  }
+
   USART0_SendString("MQTT test4 !!\r\n");
   MQTTClientInit(&c, &n, 1000, buf, 100, readbuf, 100);
   USART0_SendString("MQTT test5 !!\r\n");
@@ -103,20 +123,19 @@ int main(void) {
   data.clientID.cstring = clientid;
   data.keepAliveInterval = 10;
   data.cleansession = 1;
-  USART0_SendString("MQTT test6 !!\r\n");
   retVal = MQTTConnect(&c, &data);
   USART0_SendString("MQTT test7 !!\r\n");
-  if(retVal != SOCK_OK ){
-	USART0_SendString("Error to MQTT COnnect");
+  if (retVal != SUCCESSS) {
+    USART0_SendString("Error to MQTT COnnect\r\n");
   }
   retVal = MQTTSubscribe(&c, "boardLED2", QOS0, messageArrived);
-  if( retVal != 1) {
-	  USART0_SendString("Error to MQTT mqtt subscribe");
+  if (retVal != 1) {
+    USART0_SendString("Error to MQTT mqtt subscribe\r\n");
   }
   while (1) {
     MQTTYield(&c, 1000);
     MQTTPublish(&c, "boardLED", &MessageToBroker);
     _delay_ms(1000);
-    USART0_SendString("While 1 ");
+    USART0_SendString("While 1 \r\n");
   }
 }
